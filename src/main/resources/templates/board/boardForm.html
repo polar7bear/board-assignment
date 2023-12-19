@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>구름 과제 - 게시판 만들기</title>
+</head>
+<body>
+    <form action="/board/add" th:object="${boardForm}" method="post">
+        <label th:for="title">제목</label>
+        <input type="text" th:field="*{title}" placeholder="제목을 입력 해주세요." />
+        <p style="color: red;" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">error</p>
+        <br><br><br>
+        <textarea th:field="*{content}" cols="50" rows="20" style="resize: none;"></textarea>
+
+        <br>
+        <button type="submit">글 등록</button>
+    </form>
+    <br><br>
+    <button onclick="history.back()">뒤로 가기</button>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>구름 과제 - 게시판 만들기</title>
+</head>
+<body>
+
+<table>
+    <thead>
+        <tr>
+            <th>글 번호</th>
+            <th>제 목</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="board : ${boardList}">
+            <td th:text="${board.id}"></td>
+            <td th:text="${board.title}"></td>
+            <td>
+                <a th:href="@{/board/{id}/edit (id=${board.id})}">글 수정</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div>
+    <ul>
+        <li th:each="pageNum : ${#numbers.sequence(1, totalPage)}">
+            <a th:href="@{/board/list(page=${pageNum})}" th:text="${pageNum}"></a>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>
