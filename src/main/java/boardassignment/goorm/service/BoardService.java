@@ -34,4 +34,20 @@ public class BoardService {
         return boardRepository.findOne(id);
     }
 
+    //게시글 수정
+    @Transactional
+    public Board update(Long id, String title, String content) {
+        Board board = boardRepository.findOne(id);
+        board.setTitle(title);
+        board.setContent(content);
+
+        return board;
+    }
+
+    //게시글 삭제
+    @Transactional
+    public void remove(Long id) {
+        boardRepository.remove(id);
+    }
+
 }

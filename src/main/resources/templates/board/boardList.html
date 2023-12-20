@@ -16,9 +16,13 @@
     <tbody>
         <tr th:each="board : ${boardList}">
             <td th:text="${board.id}"></td>
-            <td th:text="${board.title}"></td>
+            <td>
+                <a th:href="@{/board/{id}/detail(id=${board.id})}" th:text="${board.title}"></a>
+            </td>
             <td>
                 <a th:href="@{/board/{id}/edit (id=${board.id})}">글 수정</a>
+                <button th:onclick="'deleteBoard(' + ${board.id} + ')'">글 삭제</button>
+
             </td>
         </tr>
     </tbody>
@@ -31,6 +35,21 @@
         </li>
     </ul>
 </div>
+
+<script>
+    function deleteBoard(boardId) {
+        fetch('/board/' + boardId + '/delete', {
+            method: 'DELETE'
+        }).then(response => {
+            if (response.ok) {
+                alert('글이 삭제되었습니다.');
+                window.location.href = '/board/list';
+            } else {
+                alert('삭제 실패');
+            }
+        });
+    }
+</script>
 
 </body>
 </html>

@@ -31,7 +31,8 @@ public class BoardRepository {
     //게시글 목록 조회
     public List<Board> findAll(int page, int size) {
         int firstResult = (page - 1) * size;
-        return em.createQuery("select b from Board b", Board.class)
+
+        return em.createQuery("SELECT b FROM Board b WHERE b.deletedAt IS NULL", Board.class)
                 .setFirstResult(firstResult)
                 .setMaxResults(size)
                 .getResultList();
@@ -48,9 +49,10 @@ public class BoardRepository {
         return em.find(Board.class, id);
     }
 
+    //게시글 삭제
+    public void delete(Long id) {
 
-
-
+    }
 
 
 }

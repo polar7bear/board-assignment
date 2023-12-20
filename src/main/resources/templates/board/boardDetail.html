@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>구름 과제 - 게시판 만들기</title>
+
+    <style>
+        .content-cell {
+            width: 400px; /* 콘텐츠 칼럼의 너비를 지정 */
+            word-wrap: break-word; /* 긴 단어가 있을 경우 줄바꿈 */
+            white-space: normal; /* 내용을 여러 줄로 표시 */
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <p>글 번호</p>
+    <span th:text="${board.id}"></span>
+    <p>글 제목</p>
+    <span th:text="${board.title}">글 제목</span>
+</div>
+<br><br>
+<div>
+    <textarea th:text="${board.content}" class="content-cell" readonly="true" cols="50" rows="20" style="resize: none;"></textarea>
+</div>
+<a th:href="@{/board/{id}/edit(id=${board.id})}">글 수정</a>
+<a href="@/board/{id}/delete(id=${board.id})}">글 삭제</a>
+</body>
+</html>

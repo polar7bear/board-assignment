@@ -38,7 +38,7 @@ public class BoardController {
         board.setContent(boardForm.getContent());
 
         boardService.create(board);
-        return "redirect:/board/detail";
+        return "redirect:/board/list";
     }
 
 
@@ -57,13 +57,35 @@ public class BoardController {
         return "board/boardList";
     }
 
+    @GetMapping("/{id}/edit")
+    public String boardUpdateForm(@PathVariable("id") Long id, Model model) {
+        Board editBoard = new Board();
+        Board board = boardService.findOne(id);
 
-    @GetMapping("/detail")
-    public String boardDetail() {
-        return "";
+        editBoard.setId(board.getId());
+        editBoard.setTitle(board.getTitle());
+        editBoard.setContent(board.getContent());
+
+        model.addAttribute("board", editBoard);
+        return "board/updateBoardForm";
     }
 
+    @PostMapping("/{id}/edit")
+    public String boardUpdate(@PathVariable("id") Long id, @ModelAttribute("board") BoardForm boardForm, BindingResult result, Model model) {
+        if(result.hasErrors()) {
+            return "redirect:/{id}/edit";
+        }
+        Board board = boardService.update(id, boardForm.getTitle(), boardForm.getContent());
+        model.addAttribute("board", board);
 
+        return "board/boardDetail";
+    }
 
+    @GetMapping("/{id}/detail")
+    public String boardDetail(@PathVariable("id") Long id, Model model) {
+        Board board = boardService.findOne(id);
+        model.addAttribute("board", board);
+        return "board/boardDetail";
+    }
 
 }
