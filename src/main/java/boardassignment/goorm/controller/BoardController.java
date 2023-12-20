@@ -2,8 +2,10 @@ package boardassignment.goorm.controller;
 
 import boardassignment.goorm.dto.BoardForm;
 import boardassignment.goorm.entity.Board;
+import boardassignment.goorm.entity.Reply;
 import boardassignment.goorm.repository.BoardRepository;
 import boardassignment.goorm.service.BoardService;
+import boardassignment.goorm.service.ReplyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,8 @@ public class BoardController {
     private final BoardService boardService;
 
     private final BoardRepository boardRepository;
+
+    private final ReplyService replyService;
 
     @GetMapping("/add")
     public String boardForm(Model model) {
@@ -86,6 +90,16 @@ public class BoardController {
         Board board = boardService.findOne(id);
         model.addAttribute("board", board);
         return "board/boardDetail";
+    }
+
+    @PostMapping("/{id}/addReply")
+    public String addReply(@PathVariable Long id, @RequestParam String replyContent) {
+        Reply reply = new Reply();
+        reply.setReply(replyContent);
+        reply.setBoard(boardService.findOne(id));
+        replyService.save(reply);
+
+        return "redirect:/board/{id}/detail";
     }
 
 }

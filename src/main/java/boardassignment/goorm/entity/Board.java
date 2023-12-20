@@ -28,4 +28,14 @@ public class Board {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
+
+    public void addReply(Reply reply) {
+        replies.add(reply);
+        reply.setBoard(this);
+    }
+
+    public void deleteReply(Reply reply) {
+        replies.remove(reply);
+        reply.setBoard(null);
+    }
 }

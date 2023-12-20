@@ -1,6 +1,7 @@
 package boardassignment.goorm.repository;
 
 import boardassignment.goorm.entity.Board;
+import boardassignment.goorm.entity.Reply;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,7 @@ public class BoardRepository {
     public void remove(Long id) {
         Board board = em.find(Board.class, id);
         board.setDeletedAt(LocalDate.now());
+        board.getReplies().forEach(reply -> reply.setDeletedAt(LocalDate.now()));
     }
 
     //게시글 수정은 서비스단에서 변경 감지를 통해서 작성
@@ -32,7 +34,7 @@ public class BoardRepository {
     public List<Board> findAll(int page, int size) {
         int firstResult = (page - 1) * size;
 
-        return em.createQuery("SELECT b FROM Board b WHERE b.deletedAt IS NULL", Board.class)
+        return em.createQuery("select b from Board b where b.deletedAt IS NULL", Board.class)
                 .setFirstResult(firstResult)
                 .setMaxResults(size)
                 .getResultList();
@@ -46,13 +48,18 @@ public class BoardRepository {
 
     //게시글 단건 조회
     public Board findOne(Long id) {
-        return em.find(Board.class, id);
+        return em.createQuery(
+                "select b from Board b WHERE b.id = :id", Board.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
-    //게시글 삭제
-    public void delete(Long id) {
-
+    public List<Reply> findNotDeletedReplies(Long boardId) {
+        return em.createQuery("SELECT r FROM Reply r WHERE r.board.id = :boardId AND r.deletedAt IS NULL", Reply.class)
+                .setParameter("boardId", boardId)
+                .getResultList();
     }
+
 
 
 }

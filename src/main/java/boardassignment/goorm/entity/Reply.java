@@ -24,5 +24,11 @@ public class Reply {
 
     private LocalDate deletedAt;
 
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
 }

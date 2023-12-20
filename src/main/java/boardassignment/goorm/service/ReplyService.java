@@ -1,10 +1,13 @@
 package boardassignment.goorm.service;
 
+import boardassignment.goorm.entity.Board;
 import boardassignment.goorm.entity.Reply;
 import boardassignment.goorm.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +21,15 @@ public class ReplyService {
         return reply.getReplyId();
     }
 
-    public void remove(Long id) {
-        replyRepository.remove(id);
+
+    public void remove(Long replyId) {
+        Reply reply = replyRepository.findOne(replyId);
+
+        Board board = reply.getBoard();
+        if(board != null) {
+            board.deleteReply(reply);
+        }
+
+        reply.setDeletedAt(LocalDate.now());
     }
 }

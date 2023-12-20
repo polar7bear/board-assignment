@@ -6,9 +6,9 @@
 
     <style>
         .content-cell {
-            width: 400px; /* 콘텐츠 칼럼의 너비를 지정 */
-            word-wrap: break-word; /* 긴 단어가 있을 경우 줄바꿈 */
-            white-space: normal; /* 내용을 여러 줄로 표시 */
+            width: 400px;
+            word-wrap: break-word;
+            white-space: normal;
         }
     </style>
 </head>
@@ -22,9 +22,52 @@
 </div>
 <br><br>
 <div>
-    <textarea th:text="${board.content}" class="content-cell" readonly="true" cols="50" rows="20" style="resize: none;"></textarea>
+    <textarea th:text="${board.content}" class="content-cell" readonly="true" cols="50" rows="20"
+              style="resize: none;"></textarea>
 </div>
 <a th:href="@{/board/{id}/edit(id=${board.id})}">글 수정</a>
-<a href="@/board/{id}/delete(id=${board.id})}">글 삭제</a>
+<button th:onclick="'deleteBoard(' + ${board.id} + ')'">글 삭제</button>
+
+<form th:action="@{/board/{id}/addReply(id=${board.id})}" method="post">
+    <textarea name="replyContent" placeholder="댓글을 입력하세요"></textarea>
+    <button type="submit">댓글 작성</button>
+</form>
+<div>
+    <ul>
+        <li th:each="reply : ${board.replies}">
+            <span th:text="${reply.reply}"></span>
+            <button th:onclick="'deleteReply(' + ${reply.replyId} + ')'">댓글 삭제</button>
+        </li>
+    </ul>
+</div>
+
+<script>
+    function deleteReply(replyId) {
+        fetch('/reply/' + replyId + '/delete', {
+            method: 'DELETE'
+        }).then(response => {
+            if (response.ok) {
+                alert('댓글이 삭제되었습니다.');
+                window.location.reload();
+            } else {
+                alert('삭제 실패');
+            }
+        });
+    }
+
+
+    function deleteBoard(boardId) {
+        fetch('/board/' + boardId + '/delete', {
+            method: 'DELETE'
+        }).then(response => {
+            if (response.ok) {
+                alert('글이 삭제되었습니다.');
+                window.location.href = '/board/list';
+            } else {
+                alert('삭제 실패');
+            }
+        });
+    }
+</script>
 </body>
 </html>
